@@ -1,0 +1,20 @@
+[
+  {
+    "GueltigAb": "1/2/1996",
+    "GueltigBis": "1/2/1996",
+    "Relationsnummer": "12345",
+    "FilialNUM": "fil FilialNUM new",
+    "PickupCountry": "Turkey",
+    "Zustellgebiet": "Zustellgebiet 12345678910",
+    "Deaktivierung": false
+  },
+  {
+    "GueltigAb": "1/2/1996",
+    "GueltigBis": "1/2/1996",
+    "Relationsnummer": "123456",
+    "FilialNUM": "fil FilialNUM new",
+    "PickupCountry": "Turkey",
+    "Zustellgebiet": "Zustellgebiet 12345678910",
+    "Deaktivierung": false
+  }
+]
