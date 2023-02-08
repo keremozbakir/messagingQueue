@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var receivingApiRouter = require('./routes/receiving');
+var messageQueueRouter = require('./routes/messageQueue');
 const bodyParser = require('body-parser');
 
 var app = express();
@@ -23,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/receiving-api', receivingApiRouter);
-
+app.use('/message-queue', messageQueueRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

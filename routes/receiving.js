@@ -9,7 +9,6 @@ const {
   messageQueuePath,
 } = require('./../config/constants.js');
 
-const fs = require('fs');
 /* GET home page. */
 router.post('/:mode', function (req, res, next) {
   var mode = req.params.mode;
