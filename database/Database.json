@@ -15,6 +15,6 @@
     "FilialNUM": "fil FilialNUM new",
     "PickupCountry": "Turkey",
     "Zustellgebiet": "Zustellgebiet 12345678910",
-    "Deaktivierung": false
+    "Deaktivierung": true
   }
 ]

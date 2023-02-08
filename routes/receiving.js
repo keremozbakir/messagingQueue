@@ -13,7 +13,10 @@ const fs = require('fs');
 /* GET home page. */
 router.post('/:mode', function (req, res, next) {
   var mode = req.params.mode;
-
+  const { error, value } = validatorSchema.validate(req.body);
+  if (error) {
+    return res.status(400).send({ error });
+  }
   if (!modes.includes(mode)) {
     var wrongMode = true;
     console.log('not a mode ! ');
@@ -22,12 +25,7 @@ router.post('/:mode', function (req, res, next) {
   if (mode) {
     if (mode === modes[0]) {
       console.log('api running on standard mode');
-      const { error, value } = validatorSchema.validate(req.body);
-      if (error) {
-        res.send(error);
-      } else {
-        updateOrSave(req.body, databasePath);
-      }
+      updateOrSave(req.body, databasePath);
     } else if (mode === modes[1]) {
       console.log('API running on comparison mode');
       //pop oldest data
