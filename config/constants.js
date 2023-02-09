@@ -1,6 +1,7 @@
 const modes = ['Standard', 'Comparison'];
-const databasePath = 'database/Database.json';
-const messageQueuePath = 'database/messages.json';
+const databasePath = './database/Database.json';
+const messageQueuePath = './database/messages.json';
+
 const { validatorSchema } = require('./../helpers/global/validator.js');
 const fs = require('fs');
 const differentDataReport = 'Different data in the fields: ';
@@ -16,8 +17,4 @@ module.exports = {
   messageQueueEndpoint,
 };
 
-// exports.modes = modes;
-// exports.databasePath = databasePath;
-// exports.validatorSchema = validatorSchema;
-// exports.messageQueuePath = messageQueuePath;
 exports.fs = fs;

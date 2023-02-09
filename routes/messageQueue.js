@@ -1,17 +1,18 @@
 var express = require('express');
 var router = express.Router();
 const fs = require('fs');
+const { databasePath } = require('./../config/constants.js');
 const createReport = require('./../helpers/global/createReport.js');
 const compareFields = require('./../helpers/global/compareFields.js');
-
-const database = JSON.parse(
-  fs.readFileSync('./database/Database.json').toString()
-);
+const popOldestData = require('./../helpers/global/popOldestData.js');
+var report;
+const database = JSON.parse(fs.readFileSync(databasePath).toString());
 
 router.post('/', function (req, res, next) {
   const messagesData = req.body;
-  var report;
+
   var reportsArr = [];
+  popOldestData();
   messagesData.forEach((messageData) => {
     var foundData = database.find(
       (dbData) => dbData.Relationsnummer === messageData.Relationsnummer
@@ -32,7 +33,10 @@ router.post('/', function (req, res, next) {
       reportsArr.push(...report);
     }
   });
-  res.send(reportsArr);
+  req.body = reportsArr;
+
+  next();
+  //res.send(reportsArr);
 });
 
 module.exports = router;

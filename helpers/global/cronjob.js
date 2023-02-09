@@ -6,7 +6,7 @@ var data = [];
 axios.defaults.baseURL = messageQueueEndpoint;
 
 module.exports = function scheduleCronjob() {
-  cron.schedule('*/5 * * * * *', () => {
+  cron.schedule('*/15 * * * * *', () => {
     console.log('cron job running! ');
     data = readJson('./database/messages.json');
     callMessageQueue();

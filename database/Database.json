@@ -2,19 +2,55 @@
   {
     "GueltigAb": "1/2/1996",
     "GueltigBis": "1/2/1996",
-    "Relationsnummer": "123",
+    "Relationsnummer": "5",
     "FilialNUM": "fil FilialNUM new",
     "PickupCountry": "Turkey",
     "Zustellgebiet": "Zustellgebiet 12345678910",
-    "Deaktivierung": true
+    "Deaktivierung": false
   },
   {
     "GueltigAb": "1/2/1996",
     "GueltigBis": "1/2/1996",
-    "Relationsnummer": "123456",
+    "Relationsnummer": "51",
     "FilialNUM": "fil FilialNUM new",
     "PickupCountry": "Turkey",
     "Zustellgebiet": "Zustellgebiet 12345678910",
-    "Deaktivierung": true
+    "Deaktivierung": false
+  },
+  {
+    "GueltigAb": "1/2/1996",
+    "GueltigBis": "1/2/1996",
+    "Relationsnummer": "5123",
+    "FilialNUM": "fil FilialNUM new",
+    "PickupCountry": "Turkey",
+    "Zustellgebiet": "Zustellgebiet 12345678910",
+    "Deaktivierung": false
+  },
+  {
+    "GueltigAb": "1/2/1996",
+    "GueltigBis": "1/2/1996",
+    "Relationsnummer": "5123e23432",
+    "FilialNUM": "fil FilialNUM new",
+    "PickupCountry": "Turkey",
+    "Zustellgebiet": "Zustellgebiet 12345678910",
+    "Deaktivierung": false
+  },
+  {
+    "GueltigAb": "1/2/1996",
+    "GueltigBis": "1/2/1996",
+    "Relationsnummer": "5123e234323343",
+    "FilialNUM": "fil FilialNUM new",
+    "PickupCountry": "Turkey",
+    "Zustellgebiet": "Zustellgebiet 12345678910",
+    "Deaktivierung": false
+  },
+  {
+    "GueltigAb": "1/2/1996",
+    "GueltigBis": "1/2/1996",
+    "Relationsnummer": "5123e234323343sdfs",
+    "FilialNUM": "fil FilialNUM new",
+    "PickupCountry": "Turkey",
+    "Zustellgebiet": "Zustellgebiet 12345678910",
+    "Deaktivierung": false
   }
 ]
