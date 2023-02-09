@@ -13,22 +13,23 @@ router.post('/', function (req, res, next) {
   var report;
   var reportsArr = [];
   messagesData.forEach((messageData) => {
-    const foundData = database.find(
+    var foundData = database.find(
       (dbData) => dbData.Relationsnummer === messageData.Relationsnummer
     );
+
+    //console.log(messageData);
     if (foundData) {
       var differentFields = compareFields(messageData, foundData);
-
       if (differentFields.length > 0) {
         report = createReport(foundData.Relationsnummer, differentFields);
-        reportsArr.push(report);
+        reportsArr.push(...report);
       } else {
         void 0;
         //do nothing
       }
     } else {
-      report = createReport(foundData.Relationsnummer);
-      reportsArr.push(report);
+      report = createReport(messageData.Relationsnummer);
+      reportsArr.push(...report);
     }
   });
   res.send(reportsArr);

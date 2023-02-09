@@ -9,14 +9,7 @@ module.exports = function createReport(relNummer) {
   var relNumObj = { Relationsnummer: relNummer };
   const reportArray = [];
   if (args.length === 1) {
-    var rep = { ...relNumObj, reportMessage: notInSystemReport };
-    reportArray.push(rep);
-    // if (!this.isInArray(this.reportArray, rep)) {
-    //   this.reportArray.push(rep);
-    //   console.log(this.reportArray.length);
-    // } else {
-    //   console.log('report allready exists');
-    // }
+    reportArray.push({ ...relNumObj, reportMessage: notInSystemReport });
   } else if (args.length === 2) {
     reportArray.push({
       ...relNumObj,
@@ -25,5 +18,7 @@ module.exports = function createReport(relNummer) {
   } else {
     return false;
   }
+  // console.log(reportArray);
+  // console.log('------------------------------------');
   return reportArray;
 };
