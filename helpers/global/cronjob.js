@@ -3,17 +3,20 @@ const { messageQueueEndpoint } = require('../../config/constants.js');
 const readJson = require('./readJson.js');
 const axios = require('axios');
 var data = [];
+const popOldestData = require('.././global/popOldestData.js');
 axios.defaults.baseURL = messageQueueEndpoint;
 
 module.exports = function scheduleCronjob() {
-  cron.schedule('*/15 * * * * *', () => {
+  cron.schedule('* */12 * * * *', () => {
     console.log('cron job running! ');
-    data = readJson('./database/messages.json');
+    data = popOldestData();
+    if (!data) {
+      // if the messageQueue is empty
+      data = [];
+    }
     callMessageQueue();
   });
 };
-
-//console.log(typeof data === typeof readJson('./database/Database.json'));
 
 async function callMessageQueue() {
   await axios
@@ -22,6 +25,6 @@ async function callMessageQueue() {
       console.log('response:', response.data);
     })
     .catch((error) => {
-      //console.log('error:', error);
+      console.log('error:', error);
     });
 }

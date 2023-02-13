@@ -1,52 +1,97 @@
 const request = require('supertest');
 const app = require('./app');
+
 const {
-  falseDummyDataReceiving,
-  workingDummyData,
-  requiredFieldsTesting,
-  receivingApiTestUrl,
-} = require('./config/constants.js');
+  falseDataReceiving,
+  standardModeUrl,
+  comparisonModeUrl,
+  correctDataReceiving,
+  wrongFieldReceiving,
+  wrongEndpoint,
+  correctDataReceivingRelNum2,
+} = require('./config/test.constants');
 
 describe('DataReceiving-API POST /receiving-api/:mode', () => {
   it('1 reqBodyIsJson validates---> should get Json type data', () => {
     return request(app)
-      .post(receivingApiTestUrl)
+      .post(standardModeUrl)
       .expect('Content-Type', 'application/json; charset=utf-8');
   });
 
-  it('2 reqObjEmpty Returns 400 if any required field is empty or null', async () => {
+  it('2 reqBodyNotJson  --> if request body is not JSON return', async () => {
     return request(app)
-      .post(receivingApiTestUrl)
-      .send(falseDummyDataReceiving)
-      .expect(400)
-      .then((response) => {
-        requiredFieldsTesting.forEach((field) => {
-          expect(response.body[field]).not.toBeNull();
-        });
-      });
+      .post(standardModeUrl)
+      .send(['this is dummy data'])
+      .expect(400);
   });
 
-  it('3 reqObjFieldType ---> Data field types should be correct', () => {
+  it('3 reqObjEmpty  --> if request body has empty or null fields return 400', async () => {
     return request(app)
-      .post(receivingApiTestUrl)
-      .send(workingDummyData)
-      .then((response) => {
-        expect(response.body);
-        expect.objectContaining({
-          GueltigAb: expect.any(Date),
-          GueltigBis: expect.any(Date),
-          Relationsnummer: expect.any(String),
-          FilialNUM: expect.any(String),
-          PickupCountry: expect.any(String),
-          ZustellGebiet: expect.any(String),
-          Deactivierung: expect.any(Boolean),
-        });
-      });
+      .post(standardModeUrl)
+      .send(falseDataReceiving)
+      .expect(400);
   });
 
-  it('4 reqModeCheck POST /receiving-api/:mode ---> create or update data if RelNum exists and write to Json file  ', () => {
+  it('4 reqObjFieldType  --> if request body field types are correct return 200', async () => {
     return request(app)
-      .post(receivingApiTestUrl + '/hello-world')
+      .post(standardModeUrl)
+      .send(correctDataReceiving)
       .expect(200);
+  });
+
+  it('5 reqObjWrongField  --> if request body field types are wrong return 400', async () => {
+    return request(app)
+      .post(comparisonModeUrl)
+      .send(wrongFieldReceiving)
+      .expect(400);
+  });
+
+  it('6 404notFound  --> wrong enpoint return 404', async () => {
+    return request(app)
+      .post(wrongEndpoint)
+      .send(correctDataReceiving)
+      .expect(404);
+  });
+
+  it('7 DbSaveTest  --> check if data is saved to database', async () => {
+    const postReq = await request(app)
+      .post(standardModeUrl)
+      .send(correctDataReceiving) //this has relationsnummer 1
+      .expect(200);
+
+    const getReq = await request(app)
+      .get('/receiving-api/Standard/' + '1')
+      .expect(200);
+    //expect(getReq.body).toEqual({ message: 'Data exists in database' });
+  });
+
+  it('8 DbUpdateTest  --> check if data is updated on standard mode', async () => {
+    const postReq2 = await request(app)
+      .post(standardModeUrl)
+      .send(correctDataReceivingRelNum2) //this has relationsnummer 2
+      .expect(200);
+
+    const postReq1 = await request(app)
+      .post(standardModeUrl)
+      .send(correctDataReceiving) //this has relationsnummer 1
+      .expect(200);
+
+    const getReq = await request(app) //get rel.Num 1
+      .get('/receiving-api/Standard/' + '1')
+      .expect(200);
+    expect(getReq.body).toEqual({ message: 'Data exists in database' });
+  });
+
+  it('9 MessageQueueSaveTest  --> test if data is saved to messageQueue', async () => {
+    const postReq1 = await request(app)
+      .post(comparisonModeUrl)
+      .send(correctDataReceiving) //this has relationsnummer 1
+      .expect(200);
+
+    const getReq = await request(app) //get rel.Num 1
+      .get('/receiving-api/Comparison/' + '1')
+      .expect(200);
+
+    //expect(getReq.body).toEqual({ message: 'Data exists in database' });
   });
 });

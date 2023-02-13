@@ -1,21 +1,15 @@
 const fs = require('fs');
 const { messageQueuePath } = require('./../../config/constants.js');
-// Read the JSON file
+
 module.exports = function popOldestData() {
-  fs.readFile(messageQueuePath, (error, data) => {
-    if (error) {
-      console.error(error);
-      return;
-    }
-    let array = JSON.parse(data);
-    array.shift();
-    // Write the updated array back to the JSON file
-    fs.writeFile(messageQueuePath, JSON.stringify(array), (error) => {
-      if (error) {
-        console.error(error);
-        return;
-      }
-    });
-    //console.log('Oldest data removed !');
-  });
+  if (fs.existsSync(messageQueuePath)) {
+    // Read the existing data from the file
+    const dataJSON = fs.readFileSync(messageQueuePath);
+    data = JSON.parse(dataJSON);
+  }
+  // pop data
+  var lastData = data.pop();
+  const dataJSON = JSON.stringify(data);
+  fs.writeFileSync(messageQueuePath, dataJSON);
+  return lastData;
 };

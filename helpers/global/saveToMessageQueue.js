@@ -10,7 +10,7 @@ module.exports = function addToMessageQueue(path, newData) {
   }
 
   // Add JSON data to the array
-  data.push(newData);
+  data.push([newData]);
 
   const dataJSON = JSON.stringify(data);
 
