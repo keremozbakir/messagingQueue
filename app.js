@@ -9,7 +9,10 @@ var receivingApiRouter = require('./routes/receiving');
 var messageQueueRouter = require('./routes/messageQueue');
 var processingApiRouter = require('././routes/processing');
 const bodyParser = require('body-parser');
-
+const swaggerUI = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerJsDocs = YAML.load('./api.yaml');
+//const swaggerJsDoc = require('swagger-jsdoc');
 var app = express();
 
 app.use(bodyParser.json());
@@ -22,6 +25,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
+
 app.use('/receiving-api', receivingApiRouter);
 app.use('/message-queue', messageQueueRouter, processingApiRouter);
 app.use('/processing-api', processingApiRouter);

@@ -13,7 +13,7 @@ router.post('/', function (req, res, next) {
   var totalNumberOfEntriesInDatabase = readJson(
     './database/Database.json'
   ).length;
-
+  //mutex lock
   req.body.forEach((element) => {
     if (element.reportMessage === notInSystemReport) {
       numberOfMissingEntries += 1;

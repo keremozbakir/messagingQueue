@@ -11,24 +11,33 @@ const {
   messageQueuePath,
 } = require('./../config/constants.js');
 
+/**
+ * @swagger
+ * /receiving-api
+ *
+ *
+ *
+ */
+
+// private static instance: SuggestionRepository;    private static lock = new Mutex();
+
 router.post('/:mode', function (req, res, next) {
   var mode = req.params.mode;
   const { error, value } = validatorSchema.validate(req.body);
   if (error) {
-    console.log('error heree');
     return res.status(400).send({ error });
   }
   if (!modes.includes(mode)) {
     var wrongMode = true;
-    console.log('not a mode ! ');
+    //not a valid mode
   }
 
   if (mode) {
     if (mode === modes[0]) {
-      console.log('api running on standard mode');
+      //api running on standard mode
       updateOrSave(req.body, databasePath);
     } else if (mode === modes[1]) {
-      console.log('API running on comparison mode');
+      //api running on comparison mode
 
       saveTomessageQueue(messageQueuePath, req.body);
     } else {

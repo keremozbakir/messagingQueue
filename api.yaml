@@ -1,0 +1,148 @@
+swagger: '2.0'
+
+# API info
+info:
+  title: receiving-api
+  description: An API that accepts an array of data in the request body
+  version: 1.0.0
+
+# Base API path
+basePath: /
+
+# Supported protocols
+schemes:
+  - http
+
+# Request and response content types
+consumes:
+  - application/json
+produces:
+  - application/json
+
+# API endpoints
+paths:
+  /receiving-api/{mode}:
+    post:
+      summary: Add data to the API
+      # Request body parameter
+      parameters:
+        - in: body
+          name: data
+          description: This api has two modes . 'Standard' and 'Comparison' . Comparison is for adding request to the messageQueue. Standard mode saves or updates the sent data.Pass either one of them as parameter :mode . Cant pass other strings.
+          required: true
+          schema:
+            type: object
+            properties:
+              GueltigAb:
+                example: '1/2/1996'
+                description: Date data type field
+              GueltigBis:
+                example: '1/2/1996'
+              Relationsnummer:
+                type: string
+                example: '1234567'
+              FilialNUM:
+                type: string
+                example: '123333123'
+              PickupCountry:
+                type: string
+                example: 'Turkey'
+
+              Zustellgebiet:
+                type: string
+                example: 'paderborn'
+              Deaktivierung:
+                type: boolean
+                example: false
+
+      # API responses
+      responses:
+        '200':
+          description: OK
+
+  /message-queue:
+    post:
+      summary: 'Compare a data from mesage queue with db and create a report'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'data'
+          description: 'When this api is activated, it pops data from messageQueue and compares it to database. There are two possible outcomes: 1. There is a data with same relationsnummer .If there is, then the report will contain the different fields .2. The data simply doenst exist.Then report also says that the data doesnt exist. The json report is sent to processing api. '
+          required: true
+          schema:
+            type: 'array'
+            items:
+              type: 'object'
+              properties:
+                GueltigAb:
+                  type: 'string'
+                  format: 'date'
+                GueltigBis:
+                  type: 'string'
+                  format: 'date'
+                Relationsnummer:
+                  type: 'string'
+                FilialNUM:
+                  type: 'string'
+                PickupCountry:
+                  type: 'string'
+                Zustellgebiet:
+                  type: 'string'
+                Deaktivierung:
+                  type: 'boolean'
+
+      # API responses
+      responses:
+        200:
+          description: Successfull operation
+
+  /processing-api:
+    post:
+      summary: 'Validate data entries'
+      consumes:
+        - 'application/json'
+      produces:
+        - 'application/json'
+      parameters:
+        - in: 'body'
+          name: 'data'
+          description: 'The data to validate'
+          required: true
+          schema:
+            type: 'array'
+            items:
+              type: 'object'
+              properties:
+                Relationsnummer:
+                  type: 'string'
+                  example: '123483939'
+                reportMessage:
+                  type: 'string'
+                  example: 'Different data in the fields: GueltigBis,Zustellgebiet,Deaktivierung'
+
+      responses:
+        200:
+          description: 'Report data'
+          schema:
+            type: 'object'
+            properties:
+              reportArray:
+                type: 'array'
+                items:
+                  type: 'object'
+                  properties:
+                    Relationsnummer:
+                      type: 'string'
+                      example: '2345'
+                    reportMessage:
+                      type: 'string'
+                      example: 'Different data in the fields : GueltigBis,Zustellgebiet,Deaktivierung'
+              missingScore:
+                type: 'number'
+                example: 0.16666666666666666
+              accuracyScore:
+                type: 'number'
+                example: 0.16666666666666666

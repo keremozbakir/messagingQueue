@@ -35,9 +35,6 @@ router.post('/', function (req, res, next) {
       if (differentFields.length > 0) {
         report = createReport(foundData.Relationsnummer, differentFields);
         reportsArr.push(...report);
-      } else {
-        void 0;
-        //do nothing
       }
     } else {
       report = createReport(messageData.Relationsnummer);

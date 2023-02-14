@@ -4,12 +4,13 @@ const readJson = require('./readJson.js');
 const axios = require('axios');
 var data = [];
 const popOldestData = require('.././global/popOldestData.js');
+
 axios.defaults.baseURL = messageQueueEndpoint;
 
 module.exports = function scheduleCronjob() {
   setInterval(async function () {
     try {
-      console.log('cron job running! ');
+      //console.log('cron job running! ');
       data = popOldestData();
       if (!data) {
         // if the messageQueue is empty
