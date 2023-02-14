@@ -56,13 +56,16 @@ router.get('/:mode/:relationsnummer', function (req, res, next) {
     if (jsonData.length === 0) {
       return res.status(200).send('Message Queue empty');
     }
-    var obj = jsonData[0][0];
-    let obj1String = JSON.stringify(obj);
     let obj2String = JSON.stringify(correctDataReceiving);
-
-    if (obj1String === obj2String) {
-      foundElement = 'found';
-    }
+    jsonData.forEach((element) => {
+      var singleData = element[0];
+      if (JSON.stringify(singleData) === obj2String) {
+        searchedSource = 'messageQueue';
+        return res
+          .status(200)
+          .send({ message: 'Data exists in ' + searchedSource });
+      }
+    });
 
     searchedSource = 'messageQueue';
   } else {
@@ -73,9 +76,7 @@ router.get('/:mode/:relationsnummer', function (req, res, next) {
   if (foundElement != null) {
     res.status(200).send({ message: 'Data exists in ' + searchedSource });
   } else {
-    res
-      .status(400)
-      .send({ message: 'Data does not exist in ' + searchedSource });
+    res.send({ message: 'Data does not exist in ' + searchedSource });
   }
 });
 module.exports = router;
