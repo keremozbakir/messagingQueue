@@ -9,9 +9,14 @@ const {
   wrongFieldReceiving,
   wrongEndpoint,
   correctDataReceivingRelNum2,
+  messageQueueUrl,
+  messageQueueData,
+  messageQueueBadData,
+  processingApiUrl,
+  processingData,
 } = require('./config/test.constants');
 
-describe('DataReceiving-API POST /receiving-api/:mode', () => {
+describe('DataReceiving-API POST  ', () => {
   it('1 reqBodyIsJson validates---> should get Json type data', () => {
     return request(app)
       .post(standardModeUrl)
@@ -92,6 +97,82 @@ describe('DataReceiving-API POST /receiving-api/:mode', () => {
       .get('/receiving-api/Comparison/' + '1')
       .expect(200);
 
-    //expect(getReq.body).toEqual({ message: 'Data exists in database' });
+    expect(getReq.body).toEqual({ message: 'Data exists in messageQueue' });
+  });
+
+  it('10 DbUpdateTest  --> test if data is updated in database', async () => {
+    const postReq1 = await request(app)
+      .post(standardModeUrl)
+      .send(correctDataReceiving) //this has relationsnummer 1
+      .expect(200);
+
+    const postReq2 = await request(app)
+      .post(standardModeUrl)
+      .send(correctDataReceivingRelNum2) //this has relationsnummer 2
+      .expect(200);
+
+    const getReq = await request(app) //get rel.Num 2
+      .get('/receiving-api/Standard/' + '2')
+      .expect(200);
+
+    expect(getReq.body).toEqual({ message: 'Data exists in database' });
+  });
+});
+
+describe('MessageQueue POST /message-queue', () => {
+  it('11 404NotFound  ---> wrong endpoint error test ,returns 404', () => {
+    return request(app)
+      .post('/message-queue/hello-world')
+      .send(messageQueueData)
+      .expect(404);
+  });
+
+  it('12 reqBodyNotArray  ---> Test if request body is not an array , expect 400', async () => {
+    const postReq1 = await request(app)
+      .post(messageQueueUrl)
+      .send({ test: 'data' })
+      .expect(400);
+
+    expect(postReq1.text).toBe('Invalid data type for messageQueue');
+  });
+
+  it('13 reqBodyIsArray  ---> Test if request body is an array , expect 200', async () => {
+    const postReq1 = await request(app)
+      .post(messageQueueUrl)
+      .send(messageQueueData)
+      .expect(200);
+  });
+
+  it('14 reqBodyFieldCheck  ---> Test if req body has all necessary fields', async () => {
+    const postReq1 = await request(app)
+      .post(messageQueueUrl)
+      .send(messageQueueData)
+      .expect(200);
+  });
+  it('15  reqBodyMissingField  ---> Test if req body has missing fields', async () => {
+    const postReq1 = await request(app)
+      .post(messageQueueUrl)
+      .send(messageQueueBadData)
+      .expect(400);
+  });
+});
+describe('Processing-API POST /processing-api', () => {
+  it('16 reqBodyNotArray  ---> Test if request body is not an array , expect 400', async () => {
+    const postReq1 = await request(app)
+      .post(processingApiUrl)
+      .send({
+        Relationsnummer: '123',
+        reportMessage: 'Not existing in our system',
+      })
+      .expect(400);
+
+    expect(postReq1.text).toBe('Invalid data type for receiving api');
+  });
+
+  it('17 reqBodyIsArray  ---> Test if request body is an array , expect 200', async () => {
+    const postReq1 = await request(app)
+      .post(processingApiUrl)
+      .send(processingData)
+      .expect(200);
   });
 });

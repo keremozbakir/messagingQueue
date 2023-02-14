@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const fs = require('fs');
-const { databasePath } = require('./../config/constants.js');
+const { databasePath, validatorSchema } = require('./../config/constants.js');
 const createReport = require('./../helpers/global/createReport.js');
 const compareFields = require('./../helpers/global/compareFields.js');
 const popOldestData = require('./../helpers/global/popOldestData.js');
@@ -13,6 +13,11 @@ router.post('/', function (req, res, next) {
   var reportsArr = [];
   if (!Array.isArray(messagesData)) {
     return res.status(400).send('Invalid data type for messageQueue'); //if request body isnt array
+  }
+
+  const { error, value } = validatorSchema.validate(messagesData[0]);
+  if (error) {
+    return res.status(400).send(error); //if request body isnt array
   }
 
   if (messagesData.length === 0) {

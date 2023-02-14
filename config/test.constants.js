@@ -3,6 +3,8 @@ const messageQueuePath = './database/messages.json';
 const standardModeUrl = '/receiving-api/Standard';
 const comparisonModeUrl = '/receiving-api/Comparison';
 const wrongEndpoint = '/receiving-api/Comparison/hello-world';
+const messageQueueUrl = '/message-queue';
+const processingApiUrl = '/processing-api';
 
 const falseDataReceiving = {
   GueltigAb: null,
@@ -44,6 +46,36 @@ const wrongFieldReceiving = {
   Deaktivierung: 'this is a false field',
 };
 
+const messageQueueData = [
+  {
+    GueltigAb: '1/2/1996',
+    GueltigBis: '1/2/1996',
+    Relationsnummer: '1',
+    FilialNUM: 'fil FilialNUM new',
+    PickupCountry: 'Turkey',
+    Zustellgebiet: 'Zustellgebiet 12345678910',
+    Deaktivierung: true,
+  },
+];
+
+const messageQueueBadData = [
+  {
+    GueltigAb: '1/2/1996',
+    GueltigBis: '1/2/1996',
+    Relationsnummer: '123',
+    FilialNUM: 'fil FilialNUM new',
+    PickupCountry: 'Turkey',
+    Zustellgebiet: 'Zustellgebiet 12345678910', //deaktivierung missing
+  },
+];
+
+const processingData = [
+  {
+    Relationsnummer: '123',
+    reportMessage: 'Not existing in our system',
+  },
+];
+
 module.exports = {
   databasePath,
   messageQueuePath,
@@ -54,4 +86,9 @@ module.exports = {
   wrongFieldReceiving,
   wrongEndpoint,
   correctDataReceivingRelNum2,
+  messageQueueUrl,
+  messageQueueData,
+  messageQueueBadData,
+  processingApiUrl,
+  processingData,
 };

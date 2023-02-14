@@ -6,6 +6,10 @@ const { notInSystemReport } = require('./../config/constants.js');
 router.post('/', function (req, res, next) {
   var numberOfMissingEntries = 0;
   var numberOfChangedEntries = 0;
+  if (!Array.isArray(req.body)) {
+    return res.status(400).send('Invalid data type for receiving api'); //if request body isnt array
+  }
+
   var totalNumberOfEntriesInDatabase = readJson(
     './database/Database.json'
   ).length;

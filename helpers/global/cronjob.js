@@ -7,15 +7,21 @@ const popOldestData = require('.././global/popOldestData.js');
 axios.defaults.baseURL = messageQueueEndpoint;
 
 module.exports = function scheduleCronjob() {
-  cron.schedule('* */12 * * * *', () => {
-    console.log('cron job running! ');
-    data = popOldestData();
-    if (!data) {
-      // if the messageQueue is empty
-      data = [];
+  setInterval(async function () {
+    try {
+      console.log('cron job running! ');
+      data = popOldestData();
+      if (!data) {
+        // if the messageQueue is empty
+        data = [];
+      }
+      callMessageQueue();
+    } catch (error) {
+      console.error(error);
     }
-    callMessageQueue();
-  });
+  }, 600000);
+
+  return;
 };
 
 async function callMessageQueue() {

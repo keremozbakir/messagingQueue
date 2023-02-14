@@ -15,6 +15,7 @@ router.post('/:mode', function (req, res, next) {
   var mode = req.params.mode;
   const { error, value } = validatorSchema.validate(req.body);
   if (error) {
+    console.log('error heree');
     return res.status(400).send({ error });
   }
   if (!modes.includes(mode)) {
